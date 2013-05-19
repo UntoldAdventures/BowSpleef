@@ -1,0 +1,20 @@
+name: Bow Spleef
+main: com.untoldadventures.BowSpleef
+version: 0.1
+author: UntoldAdventures
+website: www.untoldadventures.com
+commands:
+   bs:
+     description: The Basic BowSpleef Command
+     usage: |
+           Usage:
+           /<command> create [arena] - Create a BowSpleef Arena
+           /<command> set [arena] pos1 - Set Point 1
+           /<command> set [arena] pos2 - Set Point 2
+           /<command> set [arena] spawn - Set the Spawn Point
+           /<command> set [arena] disable - Disable the Arena
+           /<command> set [arena] enable - Enable the Arena
+           /<command> regen [arena] - Regen the Arena Floor
+           /<command> delete [arena] - Delete an Arena
+           /<command> quit - Quit an Arena
+           /<command> join [arena] - Join an Arena
