@@ -20,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.untoldadventures.bowspleef.api.EnumBSEvent;
 import com.untoldadventures.bowspleef.events.BowSpleefEvent;
-import com.untoldadventures.bowspleef.events.EventListener;
 
 public class BowSpleefCommandExecutor implements CommandExecutor
 {
@@ -67,7 +66,7 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 								// Inventory Storage
 								String inv = InventoryStringDeSerializer.InventoryToString(player.getInventory());
 								BowSpleef.invConfig.set(player.getName() + ".inventory", inv);
-								this.plugin.saveConfig();
+								BowSpleef.invConfig.set(player.getName() + ".arena", arena);
 								// Clearing Inventory
 								player.getInventory().clear();
 								// Teleporting to the Lobby
@@ -85,6 +84,11 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 								// Event
 								BowSpleefEvent event = new BowSpleefEvent(EnumBSEvent.JOIN, player, arena);
 								Bukkit.getServer().getPluginManager().callEvent(event);
+
+								List<String> players = BowSpleef.arenaConfig.getStringList("arenas." + arena + ".players");
+								players.add(player.getName());
+								BowSpleef.arenaConfig.set("arenas." + arena + ".players", players);
+								plugin.saveConfig();
 								return true;
 							}
 							this.pm("That arena is Disabled", player);
@@ -106,6 +110,8 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 					{
 						if (BowSpleef.invConfig.contains(player.getName()))
 						{
+							// Getting the arena they are in
+							String arena = BowSpleef.invConfig.getString(player.getName() + ".arena");
 							// Replaceing their Gamemode
 							int gmnum = BowSpleef.invConfig.getInt(player.getName() + ".return.gamemode");
 							GameMode gm = GameMode.getByValue(gmnum);
@@ -122,6 +128,11 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 							player.teleport(retpos);
 							// Removing them from the config
 							BowSpleef.invConfig.set(player.getName(), null);
+
+							List<String> players = BowSpleef.arenaConfig.getStringList("arenas." + arena + ".players");
+							players.add(player.getName());
+							plugin.saveConfig();
+							return true;
 						}
 					}
 				}
@@ -135,17 +146,24 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 					{
 						if (BowSpleef.arenaConfig.contains("arenas." + arena))
 						{
-							if (BowSpleef.arenaConfig.contains("arenas." + arena + ".players." + player) || EventListener.players.contains(player))
+							if (BowSpleef.arenaConfig.contains("arenas." + arena + ".players." + player.getName()))
 							{
 								// Event
 								BowSpleefEvent event = new BowSpleefEvent(EnumBSEvent.VOTE, player, arena);
 								Bukkit.getServer().getPluginManager().callEvent(event);
-								int votesNeeded = Math.round(EventListener.players.size() * 2/3);
-								int amountVoted = EventListener.voted.size();
-								int remaining = votesNeeded - amountVoted;
-								this.pm("You have voted to start! Only " + remaining + " votes remain!", player);
+								// int votesNeeded =
+								// Math.round(EventListener.players.size() * 2 /
+								// 3);
+								// int amountVoted = EventListener.voted.size();
+								// int remaining = votesNeeded - amountVoted;
+								// this.pm("You have voted to start! Only " +
+								// remaining + " votes remain!", player);
+
+								plugin.saveConfig();
+								return true;
 							}
 							this.pm("You aren't in an Arena!", player);
+							plugin.saveConfig();
 							return true;
 						}
 						this.pm("That arena doesn't exist!", player);
@@ -174,14 +192,17 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 
 							}
 							this.pm("That arena doesnt exist!", player);
+							plugin.saveConfig();
 							return true;
 						}
 						player.sendMessage(ChatColor.AQUA + "[BowSpleef]" + ChatColor.GRAY + " Incorrect Usage!");
 						return false;
 					}
+					plugin.saveConfig();
 					return true;
 				}
 				sender.sendMessage("[BowSpleef] This command can only be run by a Player!");
+				plugin.saveConfig();
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("create"))
@@ -192,32 +213,31 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 					{
 						if (args.length == 2)
 						{
-							if (BowSpleef.arenaConfig.getList("arenas.list").size() == 1)
-							{
-								this.pm("You can only have one arena in this version!", player);
-								return true;
-							}
 							String arena = args[1];
 							if (BowSpleef.arenaConfig.contains("arenas." + arena))
 							{
 								sender.sendMessage(ChatColor.AQUA + "[BowSpleef]" + ChatColor.GRAY + " This arena already exists!");
+								return true;
 							}
 							sender.sendMessage(ChatColor.AQUA + "[BowSpleef]" + ChatColor.GRAY + " Creating!");
 							BowSpleef.arenaConfig.createSection("arenas." + arena);
+							BowSpleef.arenaConfig.createSection("arenas." + arena + ".players");
 							BowSpleef.arenaConfig.set("arenas." + arena + ".enabled", false);
-							
+
 							// Arenas List
 							arenaNames.add(arena);
-							BowSpleef.arenaConfig.set("arenas.list", arenaNames);
+							BowSpleef.arenaConfig.set("List", arenaNames);
 
 							plugin.saveConfig();
 							return true;
 						}
 						return false;
 					}
+					plugin.saveConfig();
 					return true;
 				}
 				sender.sendMessage("[BowSpleef] This command can only be run by a Player!");
+				plugin.saveConfig();
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("regen") && args.length == 2)
@@ -241,6 +261,8 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 							this.regen(pos1, pos2, world);
 
 							sender.sendMessage(ChatColor.AQUA + "[BowSpleef]" + ChatColor.GRAY + " Arena Regenerated!");
+
+							plugin.saveConfig();
 							return true;
 						}
 						sender.sendMessage(ChatColor.AQUA + "[BowSpleef]" + ChatColor.GRAY + " Arena doesn't exist!");
@@ -273,8 +295,8 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 								BowSpleef.arenaConfig.set("arenas." + arena + ".pos1.x", pos1X);
 								BowSpleef.arenaConfig.set("arenas." + arena + ".pos1.y", pos1Y);
 								BowSpleef.arenaConfig.set("arenas." + arena + ".pos1.z", pos1Z);
-								plugin.saveConfig();
 								sender.sendMessage(ChatColor.AQUA + "[BowSpleef]" + ChatColor.GRAY + " Pos1 Set!");
+								plugin.saveConfig();
 								return true;
 							}
 							if (args[2].equalsIgnoreCase("pos2"))
@@ -302,6 +324,7 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 									return true;
 								}
 								this.pm("You are in the wrong world!", player);
+								plugin.saveConfig();
 								return true;
 							}
 							if (args[2].equalsIgnoreCase("enable"))
@@ -317,6 +340,7 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 												BowSpleef.arenaConfig.set("arenas." + arena + ".enabled", true);
 												this.plugin.saveConfig();
 												this.pm("The Arena, " + arena + ", has been enabled!", player);
+												plugin.saveConfig();
 												return true;
 											}
 											this.pm("No Lobby Point Set!", player);
@@ -383,6 +407,7 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 									BowSpleef.arenaConfig.set("arenas." + arena + ".lobby.y", y);
 									BowSpleef.arenaConfig.set("arenas." + arena + ".lobby.z", z);
 									this.pm("Lobby Point Set!", player);
+									plugin.saveConfig();
 									return true;
 								}
 								this.pm("You are in the wrong world!", player);
@@ -394,6 +419,7 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 						sender.sendMessage(ChatColor.AQUA + "[BowSpleef]" + ChatColor.GRAY + " Arena doesn't Exist!");
 						return true;
 					}
+					plugin.saveConfig();
 					return true;
 				}
 				sender.sendMessage("[BowSpleef] This command can only be run by a Player!");

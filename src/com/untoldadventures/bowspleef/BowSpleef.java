@@ -112,12 +112,12 @@ public class BowSpleef extends JavaPlugin
 	public void getArenas()
 	{
 		arenas.clear();
-		int nofa = BowSpleef.arenaConfig.getStringList("arenas.list").size();
+		int nofa = BowSpleef.arenaConfig.getStringList("List").size();
 		for (int i = 0; i <= nofa; i++)
 		{
-			String name = BowSpleef.arenaConfig.getStringList("arenas.list").get(i);
+			String name = BowSpleef.arenaConfig.getStringList("List").get(i);
 
-			Arena arena = new Arena(name);
+			Arena arena = new Arena(name, this);
 
 			arenas.add(arena);
 		}
