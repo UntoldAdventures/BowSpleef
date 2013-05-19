@@ -76,11 +76,6 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 								player.teleport(lobby);
 								// Setting them to Adventure Time
 								player.setGameMode(GameMode.ADVENTURE);
-								ItemStack bow = new ItemStack(Material.BOW, 1);
-								bow.addEnchantment(Enchantment.ARROW_FIRE, 1);
-								bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
-								player.getInventory().addItem(bow);
-								player.getInventory().addItem(new ItemStack(Material.ARROW, 1));
 								// Event
 								BowSpleefEvent event = new BowSpleefEvent(EnumBSEvent.JOIN, player, arena);
 								Bukkit.getServer().getPluginManager().callEvent(event);
