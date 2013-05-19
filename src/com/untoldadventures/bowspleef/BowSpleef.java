@@ -5,8 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.untoldadventures.bowspleef.events.EventListener;
@@ -94,9 +100,38 @@ public class BowSpleef extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
-
+		for (Player player : Bukkit.getServer().getOnlinePlayers())
+		{
+			List<String> arenas = BowSpleef.arenaConfig.getStringList("List");
+			for (int i = 0; i <= arenas.size(); i++)
+			{
+				String arena = arenas.get(i);
+				List<String> players = BowSpleef.arenaConfig.getStringList("arenas." + arena + ".players");
+				if (players.contains(player.getName()))
+				{
+					// Replaceing their Gamemode
+					int gmnum = BowSpleef.invConfig.getInt(player.getName() + ".return.gamemode");
+					GameMode gm = GameMode.getByValue(gmnum);
+					player.setGameMode(gm);
+					// Replacing their Inventory
+					Inventory inv = InventoryStringDeSerializer.StringToInventory(BowSpleef.invConfig.getString(player.getName() + ".inventory"));
+					player.getInventory().setContents(inv.getContents());
+					// Teleporting them back to their orig loc
+					int x = BowSpleef.invConfig.getInt(player.getName() + ".return.x");
+					int y = BowSpleef.invConfig.getInt(player.getName() + ".return.y");
+					int z = BowSpleef.invConfig.getInt(player.getName() + ".return.z");
+					World w = Bukkit.getWorld(BowSpleef.invConfig.getString(player.getName() + ".return.world"));
+					Location retpos = new Location(w, x, y, z);
+					player.teleport(retpos);
+					// Removing them from the config
+					BowSpleef.invConfig.set(player.getName(), null);
+					players.remove(player.getName());
+					BowSpleef.arenaConfig.set("arenas." + arena + ".players", players);
+					saveConfig();
+				}
+			}
+		}
 	}
-
 	public void saveConfig()
 	{
 		try

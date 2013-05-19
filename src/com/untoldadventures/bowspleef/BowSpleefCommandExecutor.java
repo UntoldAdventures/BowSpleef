@@ -130,7 +130,8 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 							BowSpleef.invConfig.set(player.getName(), null);
 
 							List<String> players = BowSpleef.arenaConfig.getStringList("arenas." + arena + ".players");
-							players.add(player.getName());
+							players.remove(player.getName());
+							BowSpleef.arenaConfig.set("arenas." + arena + ".players", players);
 							plugin.saveConfig();
 							return true;
 						}
@@ -139,26 +140,28 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 			}
 			if (args[0].equalsIgnoreCase("vote"))
 			{
-				String arena = args[1];
 				if (player instanceof Player)
 				{
 					if (player.hasPermission("bs.vote"))
 					{
-						if (BowSpleef.arenaConfig.contains("arenas." + arena))
+						// Getting the arena they are in
+						String arena = BowSpleef.invConfig.getString(player.getName() + ".arena");
+						if (arena != null)
 						{
-							if (BowSpleef.arenaConfig.contains("arenas." + arena + ".players." + player.getName()))
+							List<String> players = BowSpleef.arenaConfig.getStringList("arenas." + arena + ".players");
+							if (players.contains(player.getName()))
 							{
+								// Adding player to voted list
+								List<String> voted = BowSpleef.arenaConfig.getStringList("arenas." + arena + ".voted");
+								voted.add(player.getName());
+								BowSpleef.arenaConfig.set("arenas." + arena + ".voted", voted);
+								int votesNeeded = Math.round(players.size() * 2 / 3);
+								int amountVoted = voted.size();
+								int remaining = votesNeeded - amountVoted;
+								this.pm("You have voted to start! Only " + remaining + " votes remain!", player);
 								// Event
 								BowSpleefEvent event = new BowSpleefEvent(EnumBSEvent.VOTE, player, arena);
 								Bukkit.getServer().getPluginManager().callEvent(event);
-								// int votesNeeded =
-								// Math.round(EventListener.players.size() * 2 /
-								// 3);
-								// int amountVoted = EventListener.voted.size();
-								// int remaining = votesNeeded - amountVoted;
-								// this.pm("You have voted to start! Only " +
-								// remaining + " votes remain!", player);
-
 								plugin.saveConfig();
 								return true;
 							}
@@ -166,7 +169,7 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 							plugin.saveConfig();
 							return true;
 						}
-						this.pm("That arena doesn't exist!", player);
+						this.pm("You aren't in an Arena!", player);
 						return true;
 					}
 					return true;
