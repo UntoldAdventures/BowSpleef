@@ -11,7 +11,7 @@ public class BowSpleefStartEvent extends Event {
     {
 	this.arena = arena;
     }
-    
+
     public String getArena()
     {
 	return this.arena;

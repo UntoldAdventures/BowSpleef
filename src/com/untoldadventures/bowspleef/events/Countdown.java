@@ -47,7 +47,7 @@ public class Countdown extends BukkitRunnable {
 	    // Starting the Arena
 	    BowSpleefStartEvent event = new BowSpleefStartEvent(arena);
 	    Bukkit.getServer().getPluginManager().callEvent(event);
-	    
+
 	    Methods.start(arena);
 
 	    this.cancel();
