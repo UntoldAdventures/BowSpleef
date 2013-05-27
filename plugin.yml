@@ -1,10 +1,11 @@
 name: Bow Spleef
-main: com.untoldadventures.BowSpleef
+main: com.untoldadventures.bowspleef.BowSpleef
 version: 0.1
 author: UntoldAdventures
 website: www.untoldadventures.com
 commands:
    bs:
+     aliases: [bowspleef]
      description: The Basic BowSpleef Command
      usage: |
            Usage:
@@ -18,3 +19,5 @@ commands:
            /<command> delete [arena] - Delete an Arena
            /<command> quit - Quit an Arena
            /<command> join [arena] - Join an Arena
+           /<command> vote - Vote to start the arena your in
+           /<command> reload - Reloads the configs

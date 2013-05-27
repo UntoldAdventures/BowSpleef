@@ -1,18 +1,13 @@
 package com.untoldadventures.bowspleef;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 public class Arena
 {
 	private String name = null;
 	private BowSpleef plugin;
-	public List<Player> players = new ArrayList<Player>();
 
 	public Arena(String name, BowSpleef plugin)
 	{
