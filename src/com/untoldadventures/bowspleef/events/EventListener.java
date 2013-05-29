@@ -51,7 +51,7 @@ public class EventListener implements Listener
 		if (BowSpleef.invConfig.contains(player.getName()))
 		{
 			event.setCancelled(true);
-			this.pm("You can't place blocks here!", player);
+			this.pm("You can't place blocks!", player);
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -61,7 +61,7 @@ public class EventListener implements Listener
 		if (BowSpleef.invConfig.contains(player.getName()))
 		{
 			event.setCancelled(true);
-			this.pm("You can't break blocks here!", player);
+			this.pm("You can't break blocks!", player);
 		}
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
