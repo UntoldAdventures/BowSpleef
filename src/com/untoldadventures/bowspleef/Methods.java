@@ -31,8 +31,8 @@ public class Methods {
 	    GameMode gm = GameMode.getByValue(gmnum);
 	    player.setGameMode(gm);
 	    // Replacing their Inventory
-	    Inventory inv = InventoryStringDeSerializer.StringToInventory(BowSpleef.invConfig.getString(player.getName() + ".inventory"));
-	    player.getInventory().setContents(inv.getContents());
+	    loadInv(player);
+
 	    // Teleporting them back to their orig loc
 	    int x = BowSpleef.invConfig.getInt(player.getName() + ".return.x");
 	    int y = BowSpleef.invConfig.getInt(player.getName() + ".return.y");
@@ -65,8 +65,8 @@ public class Methods {
 	    GameMode gm = GameMode.getByValue(gmnum);
 	    player.setGameMode(gm);
 	    // Replacing their Inventory
-	    Inventory inv = InventoryStringDeSerializer.StringToInventory(BowSpleef.invConfig.getString(player.getName() + ".inventory"));
-	    player.getInventory().setContents(inv.getContents());
+	    loadInv(player);
+
 	    // Teleporting them back to their orig loc
 	    int x = BowSpleef.invConfig.getInt(player.getName() + ".return.x");
 	    int y = BowSpleef.invConfig.getInt(player.getName() + ".return.y");
@@ -103,8 +103,7 @@ public class Methods {
 		GameMode gm1 = GameMode.getByValue(gmnum1);
 		player1.setGameMode(gm1);
 		// Replacing their Inventory
-		Inventory inv1 = InventoryStringDeSerializer.StringToInventory(BowSpleef.invConfig.getString(player1.getName() + ".inventory"));
-		player1.getInventory().setContents(inv1.getContents());
+		loadInv(player1);
 		// Teleporting them back to their orig loc
 		int x1 = BowSpleef.invConfig.getInt(player1.getName() + ".return.x");
 		int y1 = BowSpleef.invConfig.getInt(player1.getName() + ".return.y");
@@ -140,7 +139,7 @@ public class Methods {
 		{
 		    if (!BowSpleef.arenaConfig.getBoolean("arenas." + arena + ".inGame"))
 		    {
-			if (BowSpleef.invConfig.getString(player.getName() + "arena") != "")
+			if (!BowSpleef.invConfig.contains(player.getName()))
 			{
 			    List<String> players = BowSpleef.arenaConfig.getStringList("arenas." + arena + ".players");
 			    int max = BowSpleef.arenaConfig.getInt("arenas." + arena + ".max-players");
@@ -173,12 +172,29 @@ public class Methods {
 			    BowSpleef.invConfig.set(player.getName() + ".return.y", returnPos.getBlockY());
 			    BowSpleef.invConfig.set(player.getName() + ".return.z", returnPos.getBlockZ());
 			    BowSpleef.invConfig.set(player.getName() + ".return.world", returnPos.getWorld().getName());
+
+			    Inventory storage = InventoryUtil.getArmorInventory(player.getInventory());
+			    Inventory GlobalInv = InventoryUtil.getContentInventory(player.getInventory());
+			    BowSpleef.invConfig.set(player.getName() + ".inventory", InventoryUtil.toBase64(GlobalInv));
+			    BowSpleef.invConfig.set(player.getName() + ".armor", InventoryUtil.toBase64(storage));
+
 			    // Inventory Storage
-			    String inv = InventoryStringDeSerializer.InventoryToString(player.getInventory());
+			    String inv = InventoryUtil.toBase64(player.getInventory());
+
+			    Inventory armorInv = InventoryUtil.getArmorInventory(player.getInventory());
+
+			    String armor = InventoryUtil.toBase64(armorInv);
+
+			    BowSpleef.invConfig.set(player.getName() + ".armor", armor);
 			    BowSpleef.invConfig.set(player.getName() + ".inventory", inv);
 			    BowSpleef.invConfig.set(player.getName() + ".arena", arena);
 			    // Clearing Inventory
 			    player.getInventory().clear();
+			    player.getInventory().setHelmet(null);
+			    player.getInventory().setChestplate(null);
+			    player.getInventory().setLeggings(null);
+			    player.getInventory().setBoots(null);
+
 			    // Teleporting to the Lobby
 			    World world = Bukkit.getServer().getWorld(BowSpleef.arenaConfig.getString("arenas." + arena + ".world"));
 			    int x = BowSpleef.arenaConfig.getInt("arenas." + arena + ".lobby.x"), y = BowSpleef.arenaConfig.getInt("arenas." + arena + ".lobby.y"), z = BowSpleef.arenaConfig.getInt("arenas." + arena + ".lobby.z");
@@ -273,8 +289,7 @@ public class Methods {
 		for (int z = minz; z <= maxz; z++)
 		{
 		    Block b = w.getBlockAt(x, y, z);
-		    if (b.getType() == Material.AIR)
-			b.setType(Material.TNT);
+		    b.setType(Material.TNT);
 		}
 	    }
 	}
@@ -293,6 +308,22 @@ public class Methods {
 	bow.addEnchantment(Enchantment.DURABILITY, 3);
 	player.getInventory().addItem(bow);
 	player.getInventory().addItem(new ItemStack(Material.ARROW));
+    }
+
+    public static void loadInv(Player player)
+    {
+	if (BowSpleef.invConfig.getString(player.getName() + ".inventory") == null)
+	    return;
+	Inventory a = InventoryUtil.fromBase64(BowSpleef.invConfig.getString(player.getName() + ".armor"));
+	if (a != null)
+	{
+	    player.getInventory().setArmorContents(a.getContents());
+	}
+	Inventory i = InventoryUtil.fromBase64(BowSpleef.invConfig.getString(player.getName() + ".inventory"));
+	if (i != null)
+	{
+	    player.getInventory().setContents(i.getContents());
+	}
     }
 
 }

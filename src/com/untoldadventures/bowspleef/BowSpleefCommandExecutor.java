@@ -62,10 +62,11 @@ public class BowSpleefCommandExecutor implements CommandExecutor {
 		{
 		    if (player.hasPermission("bs.quit"))
 		    {
-
 			Methods.quit(player, plugin);
 			return true;
 		    }
+
+		    this.pm("You do not have the required permissions!", player);
 		}
 	    }
 	    if (args[0].equalsIgnoreCase("vote"))
