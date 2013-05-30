@@ -190,11 +190,13 @@ public class EventListener implements Listener
 		Player player = event.getPlayer();
 		if (BowSpleef.invConfig.contains(event.getPlayer().getName()))
 		{
-			List<String> cmds = BowSpleef.bowtntConfig.getStringList("whitelisted-commands");
+			List<String> cmds = BowSpleef.bowtntConfig.getStringList("allowed-commands");
 			String cmd = event.getMessage();
 			for (int i = 0; i < cmds.size(); i++)
 			{
-				if (cmd.contains(cmds.get(i)))
+				String command = cmds.get(i);
+				command = "/" + command;
+				if (!cmd.contains(command))
 				{
 					event.setCancelled(true);
 					this.pm("You cannot use that command in an game!", player);
