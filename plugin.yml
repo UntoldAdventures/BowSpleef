@@ -1,0 +1,13 @@
+name: Bow Spleef
+main: com.untoldadventures.bowspleef.BowSpleef
+version: 0.1
+author: UntoldAdventures
+website: www.untoldadventures.com
+softdepend: [WorldEdit]
+commands:
+   bs:
+     aliases: [bowspleef]
+     description: The Basic BowSpleef Command
+     usage: |
+           Usage:
+           /<command> create [arena] - Create a BowSpleef Arena
