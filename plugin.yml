@@ -11,3 +11,19 @@ commands:
      usage: |
            Usage:
            /<command> create [arena] - Create a BowSpleef Arena
+           /<command> delete [arena] - Delete an Arena
+           /<command> list - Get a list of all Arenas
+           /<command> regen [arena] - Regenerate the arena floor
+           /<command> set [arena] spawn - Set the arena spawn point
+           /<command> set [arena] lobby - Set the arena lobby point
+           /<command> set [arena] pos1 - Set the arena floor corner point
+           /<command> set [arena] pos2 - Set the arena floor corner point
+           /<command> set [arena] max - Set the arena max players
+           /<command> set [arena] min - Set the arena min players
+           /<command> set [arena] enabled -Enable the arena
+           /<command> set [arena] disabled - Disable the arena
+           /<command> join [arena] - Join an Arena
+           /<command> quit - Quit an Arena
+           /<command> vote - Vote to start the arena
+           
+           
