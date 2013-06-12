@@ -1,6 +1,5 @@
 package com.untoldadventures.arena;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -28,7 +27,7 @@ public class Methods
 	public static void createArena(Plugin plugin, String name, Player player, FileConfiguration arenaConfig)
 	{
 		Arena arena = new Arena(name.toLowerCase(), plugin);
-		if (player.hasPermission(plugin.getName() + ".admin.create"))
+		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.create"))
 		{
 			if (!arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
 			{
@@ -59,7 +58,7 @@ public class Methods
 	public static void deleteArena(Plugin plugin, String name, Player player, FileConfiguration arenaConfig, FileConfiguration playerConfig) throws CustomException
 	{
 		Arena arena = new Arena(name, plugin);
-		if (player.hasPermission(plugin.getName() + ".admin.delete"))
+		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.delete"))
 		{
 			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
 			{
@@ -159,7 +158,7 @@ public class Methods
 
 		if (!arenaConfig.equals(playerConfig))
 		{
-			if (player.hasPermission(plugin.getName() + ".player.join"))
+			if (player.hasPermission(plugin.getName().toLowerCase() + ".player.join"))
 			{
 				if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
 				{
@@ -169,7 +168,7 @@ public class Methods
 						int max = arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".max-players");
 						if (arenaConfig.getBoolean("arenas." + arena.getName().toLowerCase() + ".inGame"))
 						{
-							if (player.hasPermission(plugin.getName() + ".player.queue"))
+							if (player.hasPermission(plugin.getName().toLowerCase() + ".player.queue"))
 							{
 								addToQueue(plugin, player, arena.getName().toLowerCase(), arenaConfig, playerConfig);
 								return;
@@ -182,7 +181,7 @@ public class Methods
 						if (players.size() == max)
 						{
 
-							if (player.hasPermission(plugin.getName() + ".player.queue"))
+							if (player.hasPermission(plugin.getName().toLowerCase() + ".player.queue"))
 							{
 								addToQueue(plugin, player, arena.getName(), arenaConfig, playerConfig);
 							} else
@@ -276,7 +275,7 @@ public class Methods
 	{
 		if (!arenaConfig.equals(playerConfig))
 		{
-			if (player.hasPermission(plugin.getName() + ".player.quit"))
+			if (player.hasPermission(plugin.getName().toLowerCase() + ".player.quit"))
 			{
 				String arena = playerConfig.getString("players." + player.getName() + ".arena");
 
@@ -343,18 +342,6 @@ public class Methods
 							}
 						}
 					}
-
-					if (players.size() < arenaConfig.getInt("arenas." + arena.toLowerCase() + ".min-players"))
-					{
-						stopArena(plugin, arena, arenaConfig, playerConfig);
-						for (String name : players)
-						{
-							Player Aplayer = Bukkit.getPlayer(name);
-							joinArena(plugin, arena, Aplayer, arenaConfig, playerConfig);
-							return;
-						}
-					}
-
 					if (players.size() == 1)
 					{
 						if (arenaConfig.getBoolean("arenas." + arena + ".inGame"))
@@ -390,7 +377,7 @@ public class Methods
 	{
 		if (!arenaConfig.equals(playerConfig))
 		{
-			if (player.hasPermission(plugin.getName() + ".player.quit"))
+			if (player.hasPermission(plugin.getName().toLowerCase() + ".player.quit"))
 			{
 				String arena = playerConfig.getString("players." + player.getName() + ".arena");
 
@@ -504,7 +491,7 @@ public class Methods
 		Location lobby = player.getLocation();
 		Arena arena = new Arena(name, plugin);
 
-		if (player.hasPermission(plugin.getName() + ".admin.set.lobby"))
+		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.set.lobby"))
 		{
 			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase().toLowerCase()))
 			{
@@ -529,7 +516,7 @@ public class Methods
 		Location spawn = player.getLocation();
 		Arena arena = new Arena(name, plugin);
 
-		if (player.hasPermission(plugin.getName() + ".admin.set.spawn"))
+		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.set.spawn"))
 		{
 			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
 			{
@@ -553,7 +540,7 @@ public class Methods
 	{
 		Arena arena = new Arena(name, plugin);
 
-		if (player.hasPermission(plugin.getName() + ".admin.set.type"))
+		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.set.type"))
 		{
 
 			arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".type", type);
@@ -566,7 +553,7 @@ public class Methods
 
 	public static void listArenas(Plugin plugin, Player player, FileConfiguration arenaConfig)
 	{
-		if (player.hasPermission(plugin.getName() + ".player.list"))
+		if (player.hasPermission(plugin.getName().toLowerCase() + ".player.list"))
 		{
 			List<String> arenas = arenaConfig.getStringList("list.arenas");
 			if (!arenas.isEmpty())
@@ -584,7 +571,7 @@ public class Methods
 
 	public static void addVote(Plugin plugin, String arena, Player player, FileConfiguration arenaConfig, FileConfiguration playerConfig)
 	{
-		if (player.hasPermission(plugin.getName() + ".player.vote"))
+		if (player.hasPermission(plugin.getName().toLowerCase() + ".player.vote"))
 		{
 			if (playerConfig.contains("players." + player.getName()))
 			{
