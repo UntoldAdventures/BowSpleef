@@ -232,7 +232,7 @@ public class Methods
 
 						for (String player1 : players)
 						{
-							pm(Bukkit.getPlayer(player1), player1 + " joined the arena!", plugin);
+							pm(Bukkit.getPlayer(player1), player.getName() + " joined the arena!", plugin);
 						}
 
 						if (players.size() == Math.ceil(max * .66))
@@ -255,6 +255,7 @@ public class Methods
 								}
 							}
 						}
+						
 
 						return;
 					}
@@ -322,7 +323,7 @@ public class Methods
 					Location returnPos = new Location(returnWorld, x, y, z);
 					player.teleport(returnPos);
 
-					playerConfig.set("players." + player.getName(), null);
+					playerConfig.set("players." + player.getName().toLowerCase(), null);
 
 					Arena arena1 = new Arena(arena, plugin);
 					ArenaQuitEvent event = new ArenaQuitEvent(player, arena1, plugin, arenaConfig, playerConfig);
