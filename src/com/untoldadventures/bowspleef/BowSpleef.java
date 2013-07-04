@@ -74,12 +74,6 @@ public class BowSpleef extends JavaPlugin
 			try
 			{
 				configFile.createNewFile();
-				List<String> cmds = new ArrayList<String>();
-				cmds.add("bs join");
-				cmds.add("bs quit");
-				cmds.add("bs vote");
-				cmds.add("bs");
-				BowSpleef.bowtntConfig.set("allowed-commands", cmds);
 			} catch (Exception ex)
 			{
 			}
@@ -111,7 +105,7 @@ public class BowSpleef extends JavaPlugin
 		} catch (Exception ex)
 		{
 		}
-
+		saveConfig();
 	}
 
 	@Override
@@ -120,12 +114,17 @@ public class BowSpleef extends JavaPlugin
 		List<String> arenas = arenaConfig.getStringList("arenas.list");
 		for (String name : arenas)
 		{
-			try
+			List<String> players = arenaConfig.getStringList("arenas." + name + ".players");
+			for (String pname : players)
 			{
-				Methods.stopNoWinArena(this, name, arenaConfig, invConfig);
-			} catch (CustomException e)
-			{
-				e.printStackTrace();
+				try
+				{
+					Methods.quitNoWinArena(this, Bukkit.getPlayer(pname), arenaConfig, invConfig);
+				} catch (CustomException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}

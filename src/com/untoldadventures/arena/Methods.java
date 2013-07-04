@@ -26,23 +26,23 @@ public class Methods
 {
 	public static void createArena(Plugin plugin, String name, Player player, FileConfiguration arenaConfig)
 	{
-		Arena arena = new Arena(name.toLowerCase(), plugin);
-		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.create"))
+		Arena arena = new Arena(name, plugin);
+		if (player.hasPermission(plugin.getName() + ".admin.create"))
 		{
-			if (!arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+			if (!arenaConfig.contains("arenas." + arena.getName()))
 			{
 				// Create the Arena
-				arenaConfig.createSection("arenas." + arena.getName().toLowerCase());
+				arenaConfig.createSection("arenas." + arena.getName());
 				List<String> players = null;
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".players", players);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".enabled", false);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".inGame", false);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".min-players", 2);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".max-players", 10);
+				arenaConfig.set("arenas." + arena.getName() + ".players", players);
+				arenaConfig.set("arenas." + arena.getName() + ".enabled", false);
+				arenaConfig.set("arenas." + arena.getName() + ".inGame", false);
+				arenaConfig.set("arenas." + arena.getName() + ".min-players", 2);
+				arenaConfig.set("arenas." + arena.getName() + ".max-players", 10);
 				List<String> arenas = arenaConfig.getStringList("list.arenas");
-				arenas.add(arena.getName().toLowerCase());
+				arenas.add(arena.getName());
 				arenaConfig.set("list.arenas", arenas);
-				pm(player, "Successfully created " + arena.getName().toLowerCase() + "!", plugin);
+				pm(player, "Successfully created " + arena.getName() + "!", plugin);
 				ArenaCreateEvent event = new ArenaCreateEvent(player, arena, plugin, arenaConfig);
 				Bukkit.getServer().getPluginManager().callEvent(event);
 				return;
@@ -58,21 +58,21 @@ public class Methods
 	public static void deleteArena(Plugin plugin, String name, Player player, FileConfiguration arenaConfig, FileConfiguration playerConfig) throws CustomException
 	{
 		Arena arena = new Arena(name, plugin);
-		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.delete"))
+		if (player.hasPermission(plugin.getName() + ".admin.delete"))
 		{
-			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+			if (arenaConfig.contains("arenas." + arena.getName()))
 			{
 				stopArena(plugin, arena.getName(), arenaConfig, playerConfig);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase(), null);
+				arenaConfig.set("arenas." + arena.getName(), null);
 				List<String> arenas = arenaConfig.getStringList("list.arenas");
-				arenas.remove(arena.getName().toLowerCase());
+				arenas.remove(arena.getName());
 				arenaConfig.set("list.arenas", arenas);
-				pm(player, "The arena, " + arena.getName().toLowerCase() + ", has been deleted!", plugin);
+				pm(player, "The arena, " + arena.getName() + ", has been deleted!", plugin);
 				ArenaDeleteEvent event = new ArenaDeleteEvent(player, arena, plugin, arenaConfig);
 				Bukkit.getServer().getPluginManager().callEvent(event);
 				return;
 			}
-			pm(player, "The arena, " + arena.getName().toLowerCase() + ", doesn't exist!", plugin);
+			pm(player, "The arena, " + arena.getName() + ", doesn't exist!", plugin);
 			return;
 		}
 		pm(player, "You can't do that!", plugin);
@@ -85,7 +85,7 @@ public class Methods
 
 		if (!arenaConfig.equals(playerConfig))
 		{
-			Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[" + plugin.getName() + "] " + ChatColor.GRAY + player.getName() + " has won " + arena.getName().toLowerCase() + "!");
+			Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[" + plugin.getName() + "] " + ChatColor.GRAY + player.getName() + " has won " + arena.getName() + "!");
 			stopArena(plugin, arena.getName(), arenaConfig, playerConfig);
 			ArenaPlayerWinEvent event = new ArenaPlayerWinEvent(player, arena, plugin, arenaConfig);
 			Bukkit.getServer().getPluginManager().callEvent(event);
@@ -100,18 +100,18 @@ public class Methods
 
 		if (!arenaConfig.equals(playerConfig))
 		{
-			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+			if (arenaConfig.contains("arenas." + arena.getName()))
 			{
-				if (arenaConfig.getBoolean("arenas." + arena.getName().toLowerCase() + ".inGame"))
+				if (arenaConfig.getBoolean("arenas." + arena.getName() + ".inGame"))
 				{
-					List<String> players = arenaConfig.getStringList("arenas." + arena.getName().toLowerCase() + ".players");
-					arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".inGame", false);
+					List<String> players = arenaConfig.getStringList("arenas." + arena.getName() + ".players");
+					arenaConfig.set("arenas." + arena.getName() + ".inGame", false);
 					for (String pname : players)
 					{
 						Player player = Bukkit.getPlayer(pname);
 						quitArena(plugin, player, arenaConfig, playerConfig);
 					}
-					List<String> queue = arenaConfig.getStringList("arenas." + arena.getName().toLowerCase() + ".queue");
+					List<String> queue = arenaConfig.getStringList("arenas." + arena.getName() + ".queue");
 					for (String p : queue)
 					{
 						joinArena(plugin, arena.getName(), Bukkit.getPlayer(p), arenaConfig, playerConfig);
@@ -130,20 +130,20 @@ public class Methods
 
 		if (!arenaConfig.equals(playerConfig))
 		{
-			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+			if (arenaConfig.contains("arenas." + arena.getName()))
 			{
-				if (arenaConfig.getBoolean("arenas." + arena.getName().toLowerCase() + ".inGame"))
+				if (arenaConfig.getBoolean("arenas." + arena.getName() + ".inGame"))
 				{
-					List<String> players = arenaConfig.getStringList("arenas." + arena.getName().toLowerCase() + ".players");
-					arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".inGame", false);
+					List<String> players = arenaConfig.getStringList("arenas." + arena.getName() + ".players");
+					arenaConfig.set("arenas." + arena.getName() + ".inGame", false);
 					for (String pname : players)
 					{
 						Player player = Bukkit.getPlayer(pname);
 						quitNoWinArena(plugin, player, arenaConfig, playerConfig);
 					}
-					List<String> queue = arenaConfig.getStringList("arenas." + arena.getName().toLowerCase() + ".queue");
+					List<String> queue = arenaConfig.getStringList("arenas." + arena.getName() + ".queue");
 					queue.clear();
-					arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".queue", queue);
+					arenaConfig.set("arenas." + arena.getName() + ".queue", queue);
 					ArenaStopEvent event = new ArenaStopEvent(arena, plugin, arenaConfig);
 					Bukkit.getServer().getPluginManager().callEvent(event);
 					return;
@@ -158,19 +158,19 @@ public class Methods
 
 		if (!arenaConfig.equals(playerConfig))
 		{
-			if (player.hasPermission(plugin.getName().toLowerCase() + ".player.join"))
+			if (player.hasPermission(plugin.getName() + ".player.join"))
 			{
-				if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+				if (arenaConfig.contains("arenas." + arena.getName()))
 				{
 					if (!playerConfig.contains("players." + player.getName()))
 					{
-						List<String> players = arenaConfig.getStringList("arenas." + arena.getName().toLowerCase() + ".players");
-						int max = arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".max-players");
-						if (arenaConfig.getBoolean("arenas." + arena.getName().toLowerCase() + ".inGame"))
+						List<String> players = arenaConfig.getStringList("arenas." + arena.getName() + ".players");
+						int max = arenaConfig.getInt("arenas." + arena.getName() + ".max-players");
+						if (arenaConfig.getBoolean("arenas." + arena.getName() + ".inGame"))
 						{
-							if (player.hasPermission(plugin.getName().toLowerCase() + ".player.queue"))
+							if (player.hasPermission(plugin.getName() + ".player.queue"))
 							{
-								addToQueue(plugin, player, arena.getName().toLowerCase(), arenaConfig, playerConfig);
+								addToQueue(plugin, player, arena.getName(), arenaConfig, playerConfig);
 								return;
 							} else
 							{
@@ -181,7 +181,7 @@ public class Methods
 						if (players.size() == max)
 						{
 
-							if (player.hasPermission(plugin.getName().toLowerCase() + ".player.queue"))
+							if (player.hasPermission(plugin.getName() + ".player.queue"))
 							{
 								addToQueue(plugin, player, arena.getName(), arenaConfig, playerConfig);
 							} else
@@ -215,35 +215,37 @@ public class Methods
 						player.getInventory().setLeggings(null);
 						player.getInventory().setBoots(null);
 						// Teleportation
-						int lobbyX = arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".positions.lobby.x"), lobbyZ = arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".positions.lobby.z"), lobbyY = arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".positions.lobby.y");
-						World worldName = Bukkit.getWorld(arenaConfig.getString("arenas." + arena.getName().toLowerCase() + ".positions.lobby.world"));
+						int lobbyX = arenaConfig.getInt("arenas." + arena.getName() + ".positions.lobby.x"), lobbyZ = arenaConfig.getInt("arenas." + arena.getName() + ".positions.lobby.z"), lobbyY = arenaConfig.getInt("arenas." + arena.getName() + ".positions.lobby.y");
+						World worldName = Bukkit.getWorld(arenaConfig.getString("arenas." + arena.getName() + ".positions.lobby.world"));
 						Location lobby = new Location(worldName, lobbyX, lobbyY, lobbyZ);
 						player.teleport(lobby);
 						// Setting them to Adventure Time
 						player.setGameMode(GameMode.ADVENTURE);
 						// Setting them to Player List
 						players.add(player.getName());
-						arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".players", players);
+						arenaConfig.set("arenas." + arena.getName() + ".players", players);
 						// Storing the Arena they are in
-						playerConfig.set("players." + player.getName() + ".arena", arena.getName().toLowerCase());
+						playerConfig.set("players." + player.getName() + ".arena", arena.getName());
 
 						ArenaJoinEvent event = new ArenaJoinEvent(player, arena, plugin, arenaConfig);
 						Bukkit.getServer().getPluginManager().callEvent(event);
-
-						for (String player1 : players)
+						if (players.size() > 0)
 						{
-							pm(Bukkit.getPlayer(player1), player.getName() + " joined the arena!", plugin);
+							pmAll(players, player.getName() + " joined the arena!", plugin);
+						} else
+						{
+							pm(player, player.getName() + " joined the arena!", plugin);
 						}
 
 						if (players.size() == Math.ceil(max * .66))
 						{
-							new Countdown(name.toLowerCase(), plugin, arenaConfig).runTaskTimer(plugin, 0L, 20L);
+							new Countdown(name, plugin, arenaConfig).runTaskTimer(plugin, 0L, 20L);
 						}
 
-						if (!arenaConfig.getBoolean("arenas." + arena.getName().toLowerCase() + ".inGame"))
+						if (!arenaConfig.getBoolean("arenas." + arena.getName() + ".inGame"))
 						{
-							List<String> Vplayers = arenaConfig.getStringList("arenas." + arena.getName().toLowerCase() + ".voted");
-							int min = arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".min-players");
+							List<String> Vplayers = arenaConfig.getStringList("arenas." + arena.getName() + ".voted");
+							int min = arenaConfig.getInt("arenas." + arena.getName() + ".min-players");
 							long needed = (long) Math.ceil(players.size() / 2);
 							int current = Vplayers.size();
 
@@ -251,11 +253,10 @@ public class Methods
 							{
 								if (players.size() >= min)
 								{
-									new Countdown(arena.getName().toLowerCase(), plugin, arenaConfig).runTaskTimer(plugin, 0L, 20L);
+									new Countdown(arena.getName(), plugin, arenaConfig).runTaskTimer(plugin, 0L, 20L);
 								}
 							}
 						}
-						
 
 						return;
 					}
@@ -276,7 +277,7 @@ public class Methods
 	{
 		if (!arenaConfig.equals(playerConfig))
 		{
-			if (player.hasPermission(plugin.getName().toLowerCase() + ".player.quit"))
+			if (player.hasPermission(plugin.getName() + ".player.quit"))
 			{
 				String arena = playerConfig.getString("players." + player.getName() + ".arena");
 
@@ -307,11 +308,11 @@ public class Methods
 					players.remove(player.getName());
 					arenaConfig.set("arenas." + arena + ".players", players);
 
-					List<String> Vplayers = arenaConfig.getStringList("arenas." + arena.toLowerCase() + ".voted");
+					List<String> Vplayers = arenaConfig.getStringList("arenas." + arena + ".voted");
 					if (Vplayers.contains(player.getName()))
 					{
 						Vplayers.remove(player.getName());
-						arenaConfig.set("arenas." + arena.toLowerCase() + ".voted", Vplayers);
+						arenaConfig.set("arenas." + arena + ".voted", Vplayers);
 					}
 
 					// Gamemode
@@ -323,15 +324,15 @@ public class Methods
 					Location returnPos = new Location(returnWorld, x, y, z);
 					player.teleport(returnPos);
 
-					playerConfig.set("players." + player.getName().toLowerCase(), null);
+					playerConfig.set("players." + player.getName(), null);
 
 					Arena arena1 = new Arena(arena, plugin);
 					ArenaQuitEvent event = new ArenaQuitEvent(player, arena1, plugin, arenaConfig, playerConfig);
 					Bukkit.getServer().getPluginManager().callEvent(event);
 
-					if (!arenaConfig.getBoolean("arenas." + arena.toLowerCase() + ".inGame"))
+					if (!arenaConfig.getBoolean("arenas." + arena + ".inGame"))
 					{
-						int min = arenaConfig.getInt("arenas." + arena.toLowerCase() + ".min-players");
+						int min = arenaConfig.getInt("arenas." + arena + ".min-players");
 						long needed = (long) Math.ceil(players.size() / 2);
 						int current = Vplayers.size();
 
@@ -339,7 +340,7 @@ public class Methods
 						{
 							if (players.size() >= min)
 							{
-								new Countdown(arena.toLowerCase(), plugin, arenaConfig).runTaskTimer(plugin, 0L, 20L);
+								new Countdown(arena, plugin, arenaConfig).runTaskTimer(plugin, 0L, 20L);
 							}
 						}
 					}
@@ -351,11 +352,11 @@ public class Methods
 							playerWin(plugin, winner, arena, arenaConfig, playerConfig);
 						} else
 						{
-							pm(player, "You have quit the arena!", plugin);
+							pmAll(players, player.getName() + " quit the arena!", plugin);
 						}
 					} else
 					{
-						pm(player, "You have quit the arena!", plugin);
+						pmAll(players, player.getName() + " quit the arena!", plugin);
 					}
 					return;
 				}
@@ -378,7 +379,7 @@ public class Methods
 	{
 		if (!arenaConfig.equals(playerConfig))
 		{
-			if (player.hasPermission(plugin.getName().toLowerCase() + ".player.quit"))
+			if (player.hasPermission(plugin.getName() + ".player.quit"))
 			{
 				String arena = playerConfig.getString("players." + player.getName() + ".arena");
 
@@ -409,7 +410,7 @@ public class Methods
 					players.remove(player.getName());
 					arenaConfig.set("arenas." + arena + ".players", players);
 
-					List<String> Vplayers = arenaConfig.getStringList("arenas." + arena.toLowerCase() + ".voted");
+					List<String> Vplayers = arenaConfig.getStringList("arenas." + arena + ".voted");
 					if (Vplayers.contains(player.getName()))
 					{
 						Vplayers.remove(player.getName());
@@ -429,7 +430,10 @@ public class Methods
 					Arena arena1 = new Arena(arena, plugin);
 					ArenaQuitEvent event = new ArenaQuitEvent(player, arena1, plugin, arenaConfig, playerConfig);
 					Bukkit.getServer().getPluginManager().callEvent(event);
-
+					if (players.size() == 0)
+					{
+						arenaConfig.set("arenas." + arena + ".inGame", false);
+					}
 					pm(player, "You have quit the arena!", plugin);
 
 					return;
@@ -457,16 +461,16 @@ public class Methods
 		{
 			deleteFromQueue(plugin, player, name, arenaConfig, playerConfig);
 		}
-		if (!arenaConfig.contains("arenas." + arena.getName().toLowerCase() + ".queue"))
+		if (!arenaConfig.contains("arenas." + arena.getName() + ".queue"))
 		{
 			List<String> queue = null;
-			arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".queue", queue);
+			arenaConfig.set("arenas." + arena.getName() + ".queue", queue);
 		}
-		List<String> queue = arenaConfig.getStringList("arenas." + arena.getName().toLowerCase() + ".queue");
+		List<String> queue = arenaConfig.getStringList("arenas." + arena.getName() + ".queue");
 		queue.add(player.getName());
-		arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".queue", queue);
+		arenaConfig.set("arenas." + arena.getName() + ".queue", queue);
 		int position = queue.size();
-		pm(player, "You are now in queue for the arena, " + arena.getName().toLowerCase() + ". Your position is " + position, plugin);
+		pm(player, "You are now in queue for the arena, " + arena.getName() + ". Your position is " + position, plugin);
 		playerConfig.set("queue." + player.getName(), name);
 
 		ArenaAddQueueEvent event = new ArenaAddQueueEvent(player, plugin, arenaConfig);
@@ -492,16 +496,16 @@ public class Methods
 		Location lobby = player.getLocation();
 		Arena arena = new Arena(name, plugin);
 
-		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.set.lobby"))
+		if (player.hasPermission(plugin.getName() + ".admin.set.lobby"))
 		{
-			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase().toLowerCase()))
+			if (arenaConfig.contains("arenas." + arena.getName()))
 			{
 				int X = lobby.getBlockX(), Y = lobby.getBlockY(), Z = lobby.getBlockZ();
 				String world = lobby.getWorld().getName();
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.lobby.x", X);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.lobby.y", Y);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.lobby.z", Z);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.lobby.world", world);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.lobby.x", X);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.lobby.y", Y);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.lobby.z", Z);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.lobby.world", world);
 				pm(player, "Lobby position Set!", plugin);
 				return;
 			}
@@ -517,16 +521,16 @@ public class Methods
 		Location spawn = player.getLocation();
 		Arena arena = new Arena(name, plugin);
 
-		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.set.spawn"))
+		if (player.hasPermission(plugin.getName() + ".admin.set.spawn"))
 		{
-			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+			if (arenaConfig.contains("arenas." + arena.getName()))
 			{
 				int X = spawn.getBlockX(), Y = spawn.getBlockY(), Z = spawn.getBlockZ();
 				String world = spawn.getWorld().getName();
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.spawn.x", X);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.spawn.y", Y);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.spawn.z", Z);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.spawn.world", world);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.spawn.x", X);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.spawn.y", Y);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.spawn.z", Z);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.spawn.world", world);
 				pm(player, "Spawn position Set!", plugin);
 				return;
 			}
@@ -541,10 +545,10 @@ public class Methods
 	{
 		Arena arena = new Arena(name, plugin);
 
-		if (player.hasPermission(plugin.getName().toLowerCase() + ".admin.set.type"))
+		if (player.hasPermission(plugin.getName() + ".admin.set.type"))
 		{
 
-			arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".type", type);
+			arenaConfig.set("arenas." + arena.getName() + ".type", type);
 			pm(player, "Type Set!", plugin);
 		}
 
@@ -554,7 +558,7 @@ public class Methods
 
 	public static void listArenas(Plugin plugin, Player player, FileConfiguration arenaConfig)
 	{
-		if (player.hasPermission(plugin.getName().toLowerCase() + ".player.list"))
+		if (player.hasPermission(plugin.getName() + ".player.list"))
 		{
 			List<String> arenas = arenaConfig.getStringList("list.arenas");
 			if (!arenas.isEmpty())
@@ -572,38 +576,36 @@ public class Methods
 
 	public static void addVote(Plugin plugin, String arena, Player player, FileConfiguration arenaConfig, FileConfiguration playerConfig)
 	{
-		if (player.hasPermission(plugin.getName().toLowerCase() + ".player.vote"))
+		if (player.hasPermission(plugin.getName() + ".player.vote"))
 		{
 			if (playerConfig.contains("players." + player.getName()))
 			{
 
-				List<String> Vplayers = arenaConfig.getStringList("arenas." + arena.toLowerCase() + ".voted");
+				List<String> Vplayers = arenaConfig.getStringList("arenas." + arena + ".voted");
 				if (!Vplayers.contains(player.getName()))
 				{
 					Vplayers.add(player.getName());
-					List<String> players = arenaConfig.getStringList("arenas." + arena.toLowerCase() + ".players");
-					arenaConfig.set("arenas." + arena.toLowerCase() + ".voted", Vplayers);
+					List<String> players = arenaConfig.getStringList("arenas." + arena + ".players");
+					arenaConfig.set("arenas." + arena + ".voted", Vplayers);
 					long needed = (long) Math.ceil(players.size() / 2);
 					int current = Vplayers.size();
-					for (String p : players)
+
+					if (needed != 0)
 					{
-						Player playerZ = Bukkit.getPlayer(p);
-						if (needed != 0)
-						{
-							pm(playerZ, player.getName() + " voted to start the game! " + current + "/" + needed, plugin);
-						}
-						if (needed == 0)
-						{
-							pm(playerZ, player.getName() + " voted to start the game! " + current + "/1", plugin);
-						}
+						pmAll(players, player.getName() + " voted to start the game! " + current + "/" + needed, plugin);
 					}
-					int min = arenaConfig.getInt("arenas." + arena.toLowerCase() + ".min-players");
+					if (needed == 0)
+					{
+						pmAll(players, player.getName() + " voted to start the game! " + current + "/1", plugin);
+					}
+
+					int min = arenaConfig.getInt("arenas." + arena + ".min-players");
 
 					if (current == needed)
 					{
 						if (players.size() >= min)
 						{
-							new Countdown(arena.toLowerCase(), plugin, arenaConfig).runTaskTimer(plugin, 0L, 20L);
+							new Countdown(arena, plugin, arenaConfig).runTaskTimer(plugin, 0L, 20L);
 						}
 					}
 				}
@@ -622,6 +624,14 @@ public class Methods
 	public static void pm(Player player, String message, Plugin plugin)
 	{
 		player.sendMessage(ChatColor.AQUA + "[" + plugin.getName() + "] " + ChatColor.GRAY + message);
+	}
+
+	public static void pmAll(List<String> players, String message, Plugin plugin)
+	{
+		for (String name : players)
+		{
+			Methods.pm(Bukkit.getPlayer(name), message, plugin);
+		}
 	}
 
 	public static void noPerm(Player player, Plugin plugin)

@@ -18,9 +18,9 @@ public class BSMethods
 		Arena arena = new Arena(name, plugin);
 		if (player.hasPermission(plugin.getName() + ".admin.set.enabled"))
 		{
-			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+			if (arenaConfig.contains("arenas." + arena.getName()))
 			{
-				if (arenaConfig.contains("arenas." + arena.getName().toLowerCase() + ".positions.pos1"))
+				if (arenaConfig.contains("arenas." + arena.getName() + ".positions.pos1"))
 				{
 					if (arenaConfig.contains("arenas." + arena.getName() + ".positions.pos2"))
 					{
@@ -28,7 +28,7 @@ public class BSMethods
 						{
 							if (arenaConfig.contains("arenas." + arena.getName() + ".positions.lobby"))
 							{
-								arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".enabled", true);
+								arenaConfig.set("arenas." + arena.getName() + ".enabled", true);
 								pm(player, "The Arena, " + arena.getName() + ", has been enabled!", plugin);
 
 								ArenaEnableEvent event = new ArenaEnableEvent(player, arena, plugin, arenaConfig);
@@ -60,14 +60,14 @@ public class BSMethods
 
 		if (player.hasPermission(plugin.getName() + ".admin.set.pos"))
 		{
-			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+			if (arenaConfig.contains("arenas." + arena.getName()))
 			{
 				int X = spawn.getBlockX(), Y = spawn.getBlockY(), Z = spawn.getBlockZ();
 				String world = spawn.getWorld().getName();
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.pos1.x", X);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.pos1.y", Y);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.pos1.z", Z);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.pos1.world", world);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.pos1.x", X);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.pos1.y", Y);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.pos1.z", Z);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.pos1.world", world);
 				pm(player, "Pos1 position Set!", plugin);
 				return;
 			}
@@ -84,14 +84,14 @@ public class BSMethods
 
 		if (player.hasPermission(plugin.getName() + ".admin.set.pos"))
 		{
-			if (arenaConfig.contains("arenas." + arena.getName().toLowerCase()))
+			if (arenaConfig.contains("arenas." + arena.getName()))
 			{
 				int X = spawn.getBlockX(), Y = spawn.getBlockY(), Z = spawn.getBlockZ();
 				String world = spawn.getWorld().getName();
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.pos2.x", X);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.pos2.y", Y);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.pos2.z", Z);
-				arenaConfig.set("arenas." + arena.getName().toLowerCase() + ".positions.pos2.world", world);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.pos2.x", X);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.pos2.y", Y);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.pos2.z", Z);
+				arenaConfig.set("arenas." + arena.getName() + ".positions.pos2.world", world);
 				pm(player, "Pos2 position Set!", plugin);
 				return;
 			}

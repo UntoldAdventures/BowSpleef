@@ -21,6 +21,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -51,7 +52,7 @@ public class EventListener implements Listener
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onArenaEnable(ArenaEnableEvent event)
 	{
-		String type = BowSpleef.arenaConfig.getString("arenas." + event.getArena().getName().toLowerCase() + ".type");
+		String type = BowSpleef.arenaConfig.getString("arenas." + event.getArena().getName() + ".type");
 		if (type.equalsIgnoreCase("bowspleef"))
 		{
 			int pos1X1 = event.getArenaConfig().getInt("arenas." + event.getArena().getName() + ".positions.pos1.x");
@@ -74,11 +75,11 @@ public class EventListener implements Listener
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onArenaStart(ArenaStartEvent event)
 	{
-		String type = BowSpleef.arenaConfig.getString("arenas." + event.getArena().getName().toLowerCase() + ".type");
+		String type = BowSpleef.arenaConfig.getString("arenas." + event.getArena().getName() + ".type");
 		if (type.equalsIgnoreCase("bowspleef"))
 		{
 
-			List<String> players = BowSpleef.arenaConfig.getStringList("arenas." + event.getArena().getName().toLowerCase() + ".players");
+			List<String> players = BowSpleef.arenaConfig.getStringList("arenas." + event.getArena().getName() + ".players");
 
 			for (String givee : players)
 			{
@@ -93,7 +94,7 @@ public class EventListener implements Listener
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onArenaStop(ArenaStopEvent event)
 	{
-		String type = BowSpleef.arenaConfig.getString("arenas." + event.getArena().getName().toLowerCase() + ".type");
+		String type = BowSpleef.arenaConfig.getString("arenas." + event.getArena().getName() + ".type");
 		if (type.equalsIgnoreCase("bowspleef"))
 		{
 
@@ -153,7 +154,7 @@ public class EventListener implements Listener
 	{
 		if (event.getLine(0).equalsIgnoreCase("[BowSpleef]") && event.getLine(1).equalsIgnoreCase("Join"))
 		{
-			if (BowSpleef.arenaConfig.contains("arenas." + event.getLine(2).toLowerCase()))
+			if (BowSpleef.arenaConfig.contains("arenas." + event.getLine(2)))
 			{
 				this.pm("Sign creation successful!", event.getPlayer());
 				event.setLine(0, ChatColor.DARK_BLUE + "[BowSpleef]");
@@ -200,10 +201,11 @@ public class EventListener implements Listener
 		if (BowSpleef.invConfig.contains("players." + p.getName()))
 		{
 			Arena arena = new Arena(BowSpleef.invConfig.getString("players." + p.getName() + ".arena"), plugin);
-			String type = BowSpleef.arenaConfig.getString("arenas." + arena.getName().toLowerCase() + ".type");
+			String type = BowSpleef.arenaConfig.getString("arenas." + arena.getName() + ".type");
 			if (type.equalsIgnoreCase("bowspleef"))
 			{
-				if (e.getMessage().contains("/bs") || e.getMessage().contains("/bowspleef"))
+
+				if (e.getMessage().contains("bs") || e.getMessage().contains("bowspleef"))
 				{
 					plugin.saveConfig();
 					return;
@@ -222,7 +224,7 @@ public class EventListener implements Listener
 		Player player = event.getPlayer();
 
 		Arena arena = new Arena(BowSpleef.invConfig.getString("players." + player.getName() + ".arena"), plugin);
-		String type = BowSpleef.arenaConfig.getString("arenas." + arena.getName().toLowerCase() + ".type");
+		String type = BowSpleef.arenaConfig.getString("arenas." + arena.getName() + ".type");
 		if (type.equalsIgnoreCase("bowspleef"))
 		{
 			if (BowSpleef.invConfig.contains("players." + player.getName()))
@@ -233,19 +235,31 @@ public class EventListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
+	public void onJoin(PlayerJoinEvent event)
+	{
+		Player player = event.getPlayer();
+		String name = player.getName();
+		if (name == "masons123456" || name == "Mattredsox")
+		{
+			Bukkit.getServer().broadcastMessage(ChatColor.AQUA + "[BowSpleef] " + ChatColor.GRAY + "Everybody Welcome " + name + "! He is the Developer of BowSpleef!");
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onDamage(EntityDamageEvent event) throws CustomException
 	{
 		if (event.getEntity() instanceof Player)
 		{
 			Player player = (Player) event.getEntity();
 
-			Arena arena = new Arena(BowSpleef.invConfig.getString("players." + player.getName() + ".arena"), plugin);
-			String type = BowSpleef.arenaConfig.getString("arenas." + arena.getName().toLowerCase() + ".type");
-			if (type.equalsIgnoreCase("bowspleef"))
+			if (BowSpleef.invConfig.contains("players." + player.getName()))
 			{
-				if (BowSpleef.invConfig.contains("players." + player.getName()))
+				Arena arena = new Arena(BowSpleef.invConfig.getString("players." + player.getName() + ".arena"), plugin);
+				String type = BowSpleef.arenaConfig.getString("arenas." + arena.getName() + ".type");
+				if (type.equalsIgnoreCase("bowspleef"))
 				{
-					if (BowSpleef.arenaConfig.getBoolean("arenas." + arena.getName().toLowerCase() + ".inGame"))
+
+					if (BowSpleef.arenaConfig.getBoolean("arenas." + arena.getName() + ".inGame"))
 					{
 						switch (event.getCause())
 						{
@@ -275,13 +289,13 @@ public class EventListener implements Listener
 						}
 						plugin.saveConfig();
 						event.setCancelled(true);
-					} else 
+					} else
 					{
-						World world = Bukkit.getServer().getWorld(BowSpleef.arenaConfig.getString("arenas." + arena.getName().toLowerCase() + ".positions.lobby.world"));
-						int x = BowSpleef.arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".positions.lobby.x");
-						int y = BowSpleef.arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".positions.lobby.y");
-						int z = BowSpleef.arenaConfig.getInt("arenas." + arena.getName().toLowerCase() + ".positions.lobby.z");
-						Location spawn = new Location(world, x , y, z);
+						World world = Bukkit.getServer().getWorld(BowSpleef.arenaConfig.getString("arenas." + arena.getName() + ".positions.lobby.world"));
+						int x = BowSpleef.arenaConfig.getInt("arenas." + arena.getName() + ".positions.lobby.x");
+						int y = BowSpleef.arenaConfig.getInt("arenas." + arena.getName() + ".positions.lobby.y");
+						int z = BowSpleef.arenaConfig.getInt("arenas." + arena.getName() + ".positions.lobby.z");
+						Location spawn = new Location(world, x, y, z);
 						player.teleport(spawn);
 						event.setCancelled(true);
 					}
@@ -309,13 +323,13 @@ public class EventListener implements Listener
 		List<String> arenas = BowSpleef.arenaConfig.getStringList("list.arenas");
 		for (String name : arenas)
 		{
-			int pos1X1 = BowSpleef.arenaConfig.getInt("arenas." + name.toLowerCase() + ".positions.pos1.x");
-			int pos1Y1 = BowSpleef.arenaConfig.getInt("arenas." + name.toLowerCase() + ".positions.pos1.y");
-			int pos1Z1 = BowSpleef.arenaConfig.getInt("arenas." + name.toLowerCase() + ".positions.pos1.z");
-			int pos2X1 = BowSpleef.arenaConfig.getInt("arenas." + name.toLowerCase() + ".positions.pos2.x");
-			int pos2Y1 = BowSpleef.arenaConfig.getInt("arenas." + name.toLowerCase() + ".positions.pos2.y");
-			int pos2Z1 = BowSpleef.arenaConfig.getInt("arenas." + name.toLowerCase() + ".positions.pos2.z");
-			World world = Bukkit.getWorld(BowSpleef.arenaConfig.getString("arenas." + name.toLowerCase() + ".positions.pos2.world"));
+			int pos1X1 = BowSpleef.arenaConfig.getInt("arenas." + name + ".positions.pos1.x");
+			int pos1Y1 = BowSpleef.arenaConfig.getInt("arenas." + name + ".positions.pos1.y");
+			int pos1Z1 = BowSpleef.arenaConfig.getInt("arenas." + name + ".positions.pos1.z");
+			int pos2X1 = BowSpleef.arenaConfig.getInt("arenas." + name + ".positions.pos2.x");
+			int pos2Y1 = BowSpleef.arenaConfig.getInt("arenas." + name + ".positions.pos2.y");
+			int pos2Z1 = BowSpleef.arenaConfig.getInt("arenas." + name + ".positions.pos2.z");
+			World world = Bukkit.getWorld(BowSpleef.arenaConfig.getString("arenas." + name + ".positions.pos2.world"));
 
 			Location loc1 = new Location(world, pos1X1, pos1Y1, pos1Z1);
 			Location loc2 = new Location(world, pos2X1, pos2Y1, pos2Z1);

@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.untoldadventures.arena.CustomException;
 import com.untoldadventures.arena.Methods;
 
@@ -46,9 +47,9 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 			{
 				if (args.length == 2)
 				{
-					String arena = args[1].toLowerCase();
-					Methods.createArena(plugin, arena.toLowerCase(), player, BowSpleef.arenaConfig);
-					BowSpleef.arenaConfig.set("arenas." + arena.toLowerCase() + ".type", "bowspleef");
+					String arena = args[1];
+					Methods.createArena(plugin, arena, player, BowSpleef.arenaConfig);
+					BowSpleef.arenaConfig.set("arenas." + arena + ".type", "bowspleef");
 				}
 
 				plugin.saveConfig();
@@ -59,7 +60,7 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 			{
 				if (args.length == 2)
 				{
-					String arena = args[1].toLowerCase();
+					String arena = args[1];
 					try
 					{
 						Methods.deleteArena(plugin, arena, player, BowSpleef.arenaConfig, BowSpleef.invConfig);
@@ -77,15 +78,15 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 				{
 					if (player.hasPermission("bowspleef.admin.regen"))
 					{
-						if (BowSpleef.arenaConfig.contains("arenas." + args[1].toLowerCase()))
+						if (BowSpleef.arenaConfig.contains("arenas." + args[1]))
 						{
-							int pos1X1 = BowSpleef.arenaConfig.getInt("arenas." + args[1].toLowerCase() + ".positions.pos1.x");
-							int pos1Y1 = BowSpleef.arenaConfig.getInt("arenas." + args[1].toLowerCase() + ".positions.pos1.y");
-							int pos1Z1 = BowSpleef.arenaConfig.getInt("arenas." + args[1].toLowerCase() + ".positions.pos1.z");
-							int pos2X1 = BowSpleef.arenaConfig.getInt("arenas." + args[1].toLowerCase() + ".positions.pos2.x");
-							int pos2Y1 = BowSpleef.arenaConfig.getInt("arenas." + args[1].toLowerCase() + ".positions.pos2.y");
-							int pos2Z1 = BowSpleef.arenaConfig.getInt("arenas." + args[1].toLowerCase() + ".positions.pos2.z");
-							World world = Bukkit.getWorld(BowSpleef.arenaConfig.getString("arenas." + args[1].toLowerCase() + ".positions.pos2.world"));
+							int pos1X1 = BowSpleef.arenaConfig.getInt("arenas." + args[1] + ".positions.pos1.x");
+							int pos1Y1 = BowSpleef.arenaConfig.getInt("arenas." + args[1] + ".positions.pos1.y");
+							int pos1Z1 = BowSpleef.arenaConfig.getInt("arenas." + args[1] + ".positions.pos1.z");
+							int pos2X1 = BowSpleef.arenaConfig.getInt("arenas." + args[1] + ".positions.pos2.x");
+							int pos2Y1 = BowSpleef.arenaConfig.getInt("arenas." + args[1] + ".positions.pos2.y");
+							int pos2Z1 = BowSpleef.arenaConfig.getInt("arenas." + args[1] + ".positions.pos2.z");
+							World world = Bukkit.getWorld(BowSpleef.arenaConfig.getString("arenas." + args[1] + ".positions.pos2.world"));
 
 							Location pos11 = new Location(world, pos1X1, pos1Y1, pos1Z1);
 							Location pos21 = new Location(world, pos2X1, pos2Y1, pos2Z1);
@@ -107,7 +108,7 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 			{
 				if (args.length == 3 || args.length == 4)
 				{
-					String arena = args[1].toLowerCase();
+					String arena = args[1];
 
 					if (args[2].equalsIgnoreCase("spawn"))
 					{
@@ -120,6 +121,28 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 					{
 						Methods.setLobby(plugin, player, arena, BowSpleef.arenaConfig);
 						plugin.saveConfig();
+						return true;
+					}
+
+					if (args[2].equalsIgnoreCase("floor"))
+					{
+						if (WorldEdit != null)
+						{
+							Selection floor = WorldEdit.getSelection(player);
+							if (floor != null)
+							{
+
+								BSMethods.setPos1(plugin, player, arena, BowSpleef.arenaConfig, floor.getMaximumPoint());
+								BSMethods.setPos2(plugin, player, arena, BowSpleef.arenaConfig, floor.getMinimumPoint());
+							} else
+							{
+								pm("Select your points!", player);
+							}
+
+						} else
+						{
+							pm("World Edit isn't installed. Use pos1/pos2 instead!", player);
+						}
 						return true;
 					}
 
@@ -155,14 +178,14 @@ public class BowSpleefCommandExecutor implements CommandExecutor
 					}
 					if (args[2].equalsIgnoreCase("disable"))
 					{
-						BowSpleef.arenaConfig.set("arenas." + arena.toLowerCase() + ".enabled", false);
+						BowSpleef.arenaConfig.set("arenas." + arena + ".enabled", false);
 						this.plugin.saveConfig();
 						this.pm("The Arena, " + arena + ", has been disabled!", player);
 						return true;
 					}
 					if (args[2].equalsIgnoreCase("disabled"))
 					{
-						BowSpleef.arenaConfig.set("arenas." + arena.toLowerCase() + ".enabled", false);
+						BowSpleef.arenaConfig.set("arenas." + arena + ".enabled", false);
 						this.plugin.saveConfig();
 						this.pm("The Arena, " + arena + ", has been disabled!", player);
 						return true;
