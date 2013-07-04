@@ -1,6 +1,6 @@
 name: BowSpleef
 main: com.untoldadventures.bowspleef.BowSpleef
-version: 0.1
+version: 0.5 A
 author: UntoldAdventures
 website: www.untoldadventures.com
 softdepend: [WorldEdit]

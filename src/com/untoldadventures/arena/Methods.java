@@ -109,6 +109,7 @@ public class Methods
 					for (String pname : players)
 					{
 						Player player = Bukkit.getPlayer(pname);
+						Bukkit.broadcastMessage(pname);
 						quitArena(plugin, player, arenaConfig, playerConfig);
 					}
 					List<String> queue = arenaConfig.getStringList("arenas." + arena.getName() + ".queue");
