@@ -51,7 +51,7 @@ public class Methods
 			pm(player, "An arena with the name: " + arena.getName() + " already exists!", plugin);
 			return;
 		}
-		pm(player, "You can't do that!", plugin);
+		pm(player, "Vous n'avez pas le droit.", plugin);
 		return;
 	}
 
@@ -75,7 +75,7 @@ public class Methods
 			pm(player, "The arena, " + arena.getName() + ", doesn't exist!", plugin);
 			return;
 		}
-		pm(player, "You can't do that!", plugin);
+		pm(player, "Vous n'avez pas le droit.", plugin);
 		return;
 	}
 
@@ -232,10 +232,10 @@ public class Methods
 						Bukkit.getServer().getPluginManager().callEvent(event);
 						if (players.size() > 0)
 						{
-							pmAll(players, player.getName() + " joined the arena!", plugin);
+							pmAll(players, player.getName() + " a rejoint l'arene!", plugin);
 						} else
 						{
-							pm(player, player.getName() + " joined the arena!", plugin);
+							pm(player, player.getName() + " a rejoint l'arene!", plugin);
 						}
 
 						if (players.size() == Math.ceil(max * .66))
@@ -261,7 +261,7 @@ public class Methods
 
 						return;
 					}
-					pm(player, "You are already in an arena!", plugin);
+					pm(player, "Vous etes deja dans une arene!", plugin);
 					return;
 				}
 				pm(player, "That arena doesn't exist!", plugin);
@@ -353,11 +353,11 @@ public class Methods
 							playerWin(plugin, winner, arena, arenaConfig, playerConfig);
 						} else
 						{
-							pmAll(players, player.getName() + " quit the arena!", plugin);
+							pmAll(players, player.getName() + " a quitte l'arene!", plugin);
 						}
 					} else
 					{
-						pmAll(players, player.getName() + " quit the arena!", plugin);
+						pmAll(players, player.getName() + " a quitte l'arene!", plugin);
 					}
 					return;
 				}
@@ -435,7 +435,7 @@ public class Methods
 					{
 						arenaConfig.set("arenas." + arena + ".inGame", false);
 					}
-					pm(player, "You have quit the arena!", plugin);
+					pm(player, "Vous avez quitte l'arene!", plugin);
 
 					return;
 				}
@@ -471,7 +471,7 @@ public class Methods
 		queue.add(player.getName());
 		arenaConfig.set("arenas." + arena.getName() + ".queue", queue);
 		int position = queue.size();
-		pm(player, "You are now in queue for the arena, " + arena.getName() + ". Your position is " + position, plugin);
+		pm(player, "Vous etes dans la file d'attente pour l'arene, " + arena.getName() + ". Vous etes le " + position, plugin);
 		playerConfig.set("queue." + player.getName(), name);
 
 		ArenaAddQueueEvent event = new ArenaAddQueueEvent(player, plugin, arenaConfig);
@@ -485,7 +485,7 @@ public class Methods
 		queue.remove(player.getName());
 		arenaConfig.set("arenas." + name + ".queue", queue);
 		playerConfig.set("queue." + player.getName(), null);
-		pm(player, "You left the queue for the arena, " + name + "!", plugin);
+		pm(player, "Vous avez quitte la file d'attente, " + name + "!", plugin);
 
 		ArenaAddQueueEvent event = new ArenaAddQueueEvent(player, plugin, arenaConfig);
 		Bukkit.getServer().getPluginManager().callEvent(event);
